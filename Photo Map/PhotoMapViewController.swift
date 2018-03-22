@@ -17,7 +17,10 @@ class PhotoMapViewController: UIViewController, UIImagePickerControllerDelegate,
     var g = "daveeeee"
     var photo: UIImage?
     var anno: [MKAnnotation] = []
+    var annoPin:[AnnotationViewController] = []
     var imag: UIImage?
+    var count = 0
+    var annoteClass: AnnotationViewController?
     
     @IBAction func cameraButtonClicked(_ sender: AnyObject) {
         
@@ -65,11 +68,17 @@ class PhotoMapViewController: UIViewController, UIImagePickerControllerDelegate,
         
         addannotations()
         // Do any additional setup after loading the view.
+        MapKitView.delegate = self
+       
+        
+
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+ 
+        
     }
     
 
@@ -79,32 +88,33 @@ class PhotoMapViewController: UIViewController, UIImagePickerControllerDelegate,
             print("count anno\(anno.count)")
             
             for i in anno{
-                
                 MapKitView.addAnnotation(i)
-                
             }
         }
 
     }
     
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseID = "AnnotationView"
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
+    {
         
+        print("mapView through \(count) times")
+        let reuseID = "myAnnotationView"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseID)
-        if (annotationView != nil) {
-            print("annotation view code")
+        if (annotationView == nil) {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
             annotationView!.canShowCallout = true
             annotationView!.leftCalloutAccessoryView = UIImageView(frame: CGRect(x:0, y:0, width: 50, height:50))
         }
         
         let imageView = annotationView?.leftCalloutAccessoryView as! UIImageView
-        imageView.image = UIImage(named: "camera")
-        
+        var mapannote = annoPin[count]
+        imageView.image = mapannote.image
+        count += 1
         return annotationView
-        
     }
+
+    // class object to store array of pictures and
     
     
     // MARK: - Navigation
@@ -116,7 +126,9 @@ class PhotoMapViewController: UIViewController, UIImagePickerControllerDelegate,
      let locate  = segue.destination as! LocationsViewController
         locate.annot = anno
         locate.ima = photo
+        locate.annoPi = annoPin
     }
     
 
 }
+

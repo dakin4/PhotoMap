@@ -7,9 +7,25 @@
 //
 
 import UIKit
+import MapKit
 
 class AnnotationViewController: UIViewController {
 
+    var set = false
+    
+    var annotate: MKAnnotation?
+    
+    var image: UIImage?
+    
+    func setup ()-> Bool{
+        if annotate == nil || image == nil{
+       return false
+        }
+        else {
+            return true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

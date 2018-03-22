@@ -22,7 +22,8 @@ class LocationsViewController: UIViewController, UITableViewDelegate, UITableVie
     var results: NSArray = []
     var annot: [MKAnnotation] = []
     var ima: UIImage?
-    
+    var annotecls: AnnotationViewController = AnnotationViewController()
+    var annoPi:[AnnotationViewController] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -88,6 +89,11 @@ class LocationsViewController: UIViewController, UITableViewDelegate, UITableVie
         annot.append(annotation)
         PhotoMapViewController.anno = annot
         PhotoMapViewController.imag = ima
+        
+        annotecls.annotate = annotation
+        annotecls.image = ima
+        annoPi.append(annotecls)
+        PhotoMapViewController.annoPin = annoPi
         self.navigationController?.pushViewController(PhotoMapViewController, animated: true)
         
         
@@ -113,8 +119,8 @@ class LocationsViewController: UIViewController, UITableViewDelegate, UITableVie
             delegate:nil,
             delegateQueue:OperationQueue.main
         )
-        
-        let task : URLSessionDataTask = session.dataTask(with: request,
+    
+            let task : URLSessionDataTask = session.dataTask(with: request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
                     if let responseDictionary = try! JSONSerialization.jsonObject(
@@ -122,7 +128,6 @@ class LocationsViewController: UIViewController, UITableViewDelegate, UITableVie
                             NSLog("response: \(responseDictionary)")
                             self.results = responseDictionary.value(forKeyPath: "response.venues") as! NSArray
                             self.tableView.reloadData()
-
                     }
                 }
         });
